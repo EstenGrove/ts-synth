@@ -32,7 +32,7 @@ class Tremolo extends SingleAudioNode {
 	}
 }
 
-class Filter extends SingleAudioNode {
+class Filter extends MultiAudioNode {
 	private _intensity!: number;
 	private _gain!: number;
 	private _filterType!: BiquadFilterType;
@@ -112,6 +112,119 @@ class Filter extends SingleAudioNode {
 	}
 }
 
+/**
+ * 'Envelope' node
+ * - Custom ADSR envelope filter for web audio sound sources.
+ */
+
+class Envelope extends MultiAudioNode {
+	private _attack: number; // 0.00s to 1.0s (eg. 0.00 is immediate attack)
+	private _decay: number;
+	private _sustain: number;
+	private _release: number;
+	// levels for each time value (eg. ADSR)
+	private _attackLevel: number;
+	private _decayLevel: number;
+	private _sustainLevel: number;
+	private _releaseLevel: number;
+	// buffer source
+	private _bufferSrc: AudioBufferSourceNode;
+
+	constructor(audioCtx: AudioContext) {
+		super(audioCtx);
+
+		// ADSR times (eg. attack at 0.00)
+		this._attack = 0;
+		this._decay = 0;
+		this._sustain = 0;
+		this._release = 0;
+		// Levels (eg. gain level at Xseconds)
+		this._attackLevel = 1;
+		this._decayLevel = 1;
+		this._sustainLevel = 1;
+		this._releaseLevel = 1;
+
+		this.nodes = {
+			attackNode: audioCtx.createGain() as GainNode,
+			decayNode: audioCtx.createGain() as GainNode,
+			sustainNode: audioCtx.createGain() as GainNode,
+			releaseNode: audioCtx.createGain() as GainNode,
+			// outputNode: audioCtx.createGain()
+			// outputNode: this.getBufferSource()
+		};
+
+		// Apply initial values to envelope
+		const attackNode = this.nodes.attackNode as GainNode;
+		const decayNode = this.nodes.decayNode as GainNode;
+		const sustainNode = this.nodes.sustainNode as GainNode;
+		const releaseNode = this.nodes.releaseNode as GainNode;
+
+		attackNode.gain.setValueAtTime(this._attackLevel, this._attack);
+		decayNode.gain.setValueAtTime(this._decayLevel, this._decay);
+		sustainNode.gain.setValueAtTime(this._sustainLevel, this._sustain);
+		releaseNode.gain.setValueAtTime(this._releaseLevel, this._release);
+
+		// connect ADSR nodes to buffer
+		this._bufferSrc = this._getBufferSource();
+		this._bufferSrc.connect(this.nodes.attackNode);
+		this._bufferSrc.connect(this.nodes.decayNode);
+		this._bufferSrc.connect(this.nodes.sustainNode);
+		this._bufferSrc.connect(this.nodes.releaseNode);
+		this._bufferSrc.connect(this.output);
+	}
+
+	public get attack(): number {
+		return this._attack;
+	}
+	public set attack(value: number | string) {
+		const val = Number(value);
+		this._attack = val;
+	}
+	public get decay(): number {
+		return this._decay;
+	}
+	public set decay(value: number | string) {
+		const val = Number(value);
+		this._decay = val;
+	}
+	public get sustain(): number {
+		return this._sustain;
+	}
+	public set sustain(value: number | string) {
+		const val = Number(value);
+		this._sustain = val;
+	}
+	public get release(): number {
+		return this._release;
+	}
+	public set release(value: number | string) {
+		const val = Number(value);
+		this._release = val;
+	}
+
+	public applyADSR() {}
+	// Generate buffer, with samples set to 1
+	// Amended from: https://github.com/itsjoesullivan/envelope-generator/blob/master/envelope-generator.js#L133
+	private _getBufferSource(): AudioBufferSourceNode {
+		const ctx = this.audioCtx;
+		const buffer = ctx.createBuffer(1, 2, ctx.sampleRate);
+		const channelData = buffer.getChannelData(0);
+		channelData[0] = 1;
+		channelData[1] = 1;
+
+		// const source = ctx.createBufferSource();
+		// source.buffer = buffer;
+		// source.loop = true;
+
+		const source = new AudioBufferSourceNode(ctx, {
+			buffer: buffer,
+			loop: true,
+		});
+
+		return source;
+	}
+}
+
 class Reverb extends MultiAudioNode {
 	private _dryAmount!: number;
 	private _wetAmount!: number;
@@ -149,4 +262,11 @@ class Reverb extends MultiAudioNode {
 	}
 }
 
-export { Tremolo, Filter, Reverb };
+export {
+	// Filters
+	Envelope,
+	Filter,
+	// LFOs & IIRs
+	Tremolo,
+	Reverb,
+};
