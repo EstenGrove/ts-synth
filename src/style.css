@@ -1,0 +1,215 @@
+:root {
+	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+	line-height: 1.5;
+	font-weight: 400;
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+
+	color-scheme: light dark;
+	color: rgba(255, 255, 255, 0.87);
+
+	/* Grey Tints */
+	--greyTintMain: #64748b;
+	--greyTint800: #728196;
+	--greyTint700: #818ea1;
+	--greyTint600: #909cad;
+	--greyTint500: #9fa9b8;
+	--greyTint400: #afb7c4;
+	--greyTint300: #bec5cf;
+	--greyTint200: #ced3db;
+	--greyTint100: #dee2e7;
+	--greyTint50: #eef0f3;
+
+	/* BLUE-GREY SHADES */
+	--blueGrey50: rgb(248, 250, 252);
+	--blueGrey100: rgb(241, 245, 249);
+	--blueGrey200: rgb(226, 232, 240);
+	--blueGrey300: rgb(203, 213, 225);
+	--blueGrey400: rgb(148, 163, 184);
+	--blueGrey500: rgb(100, 116, 139);
+	--blueGrey600: rgb(71, 85, 105);
+	--blueGrey700: rgb(51, 65, 85);
+	--blueGrey800: rgb(30, 41, 59);
+	--blueGrey900: rgb(15, 23, 42);
+
+	/* BACKGROUNDS */
+	--bg100: rgb(255, 255, 255);
+	--bg200: rgb(230, 230, 231);
+	--bg300: rgb(205, 206, 206);
+	--bg400: rgb(181, 181, 182);
+	--bg500: rgb(156, 157, 157);
+	--bg600: rgb(131, 132, 133);
+	--bg700: rgb(106, 107, 109);
+	--bg800: rgb(81, 83, 84);
+	--bg900: rgb(57, 58, 60);
+	--bg1000: rgb(32, 34, 35);
+	--bg1100: rgb(7, 9, 11);
+	--bg1200: rgb(6, 8, 10);
+	--bg1300: rgb(6, 7, 9);
+	--bg1400: rgb(5, 6, 8);
+	--bg1500: rgb(4, 5, 7);
+	--bg1600: rgb(4, 5, 6);
+	--bg1700: rgb(3, 4, 4);
+	--bg1800: rgb(2, 3, 3);
+	--bg1900: rgb(1, 2, 2);
+	--bg2000: rgb(1, 1, 1);
+	--bg2100: rgb(0, 0, 0);
+
+	/* CUSTOM VARIABLES */
+	--border: var(--greyTint800);
+	--text-color: var(--greyTint700);
+
+	--showSynth: "1";
+}
+
+*,
+*::after,
+*::before {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+html {
+	font-size: 62.5%;
+}
+body {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	background-color: var(--bg1300);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.actions {
+	width: auto;
+	padding: 4rem;
+}
+
+/* STYLES */
+.Synth {
+	width: 90rem;
+	height: 40rem;
+	border-radius: 1rem;
+	border: 1px solid var(--border);
+}
+.SynthKeysPanel {
+	width: 100%;
+	height: 60%;
+}
+.SynthKeysPanel_inner {
+	width: 100%;
+	height: 100%;
+	display: -webkit-box;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: flex-start;
+	flex-wrap: nowrap;
+	padding: 0 1rem;
+	overflow-x: auto;
+	border-radius: 0 0 1rem 1rem;
+}
+
+.SynthControls {
+	width: 100%;
+	height: 40%;
+	padding: 2rem 1rem;
+	border-bottom: 1px solid var(--border);
+}
+.SynthControls_row {
+	width: 100%;
+	height: 5rem;
+	display: -webkit-box;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: flex-start;
+	flex-wrap: nowrap;
+}
+.PowerButton {
+	width: auto;
+	border: none;
+	outline: none;
+	padding: 0.1rem 0.3rem;
+	border-radius: 0.5rem;
+	cursor: pointer;
+}
+[data-on="true"] {
+	background-color: red;
+}
+[data-on="false"] {
+	background-color: initial;
+	opacity: 0.1;
+}
+
+.SynthKey {
+	position: relative;
+	width: min-content;
+	height: 100%;
+}
+.SynthWhiteKey {
+	width: 5rem;
+	min-width: 5rem;
+	height: 100%;
+	min-height: 100%;
+	border-radius: 0 0 1rem 1rem;
+	border: 1px solid var(--border);
+	display: -webkit-box;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: flex-end;
+	flex-wrap: nowrap;
+	background-color: white;
+	color: var(--text-color);
+}
+.SynthWhiteKey:hover {
+	cursor: pointer;
+	background-color: var(--greyTint100);
+}
+.SynthWhiteKey_label {
+	font-size: 1.6rem;
+	font-weight: 600;
+	color: var(--text-color);
+}
+.SynthWhiteKey_label span {
+	font-size: 1.2rem;
+}
+
+.SynthBlackKey {
+	position: absolute;
+	width: 3rem;
+	min-width: 3rem;
+	height: 80%;
+	min-height: 80%;
+	padding: 1rem;
+	border-radius: 0 0 1rem 1rem;
+	margin-left: -1.5rem;
+	border: 1px solid var(--border);
+	display: -webkit-box;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: flex-end;
+	flex-wrap: nowrap;
+	background-color: black;
+	z-index: 2;
+}
+.SynthBlackKey:hover {
+	cursor: pointer;
+	background-color: var(--greyTint800);
+	background-color: slateblue;
+}
+.SynthBlackKey:hover .SynthBlackKey_label {
+	color: black;
+}
+.SynthBlackKey_label {
+	font-size: 1.6rem;
+	font-weight: 600;
+	color: var(--text-color);
+}

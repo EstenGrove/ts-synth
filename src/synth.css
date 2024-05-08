@@ -1,0 +1,10 @@
+.keys {
+	width: 100%;
+	max-width: 80rem;
+	height: 40rem;
+	overflow-x: auto;
+	margin-top: 4rem;
+	border: 1px solid var(--border);
+	display: flex;
+	justify-content: flex-start;
+}
